@@ -19,7 +19,7 @@
 покупателя, Признак оптовой продажи).
 
 Выполним код MsSQL
-'CREATE DATABASE SalesDB;
+'CREATE DATABASE SalesDB;'
 
 CREATE TABLE Products (
     Product_ID INT PRIMARY KEY,
