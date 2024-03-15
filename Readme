@@ -46,3 +46,67 @@ CREATE TABLE Transactions (
     FOREIGN KEY (Customer_ID) REFERENCES Customers(Customer_ID)
 );
 '''
+
+Потом выполняем код на питоне
+
+import psycopg2
+from faker import Faker
+import random
+
+fake = Faker()
+
+# Подключение к базе данных PostgreSQL
+conn = psycopg2.connect(
+    dbname="SalesDB",
+    user="your_username",
+    password="your_password",
+    host="localhost",
+    port="5432"
+)
+
+cursor = conn.cursor()
+
+# Генерация данных для таблицы Products
+for i in range(6, 106):  # Создаем 100 продуктов
+    product_name = fake.company()
+    wholesale_price = random.uniform(10, 1000)
+    retail_price = wholesale_price * random.uniform(1.1, 1.5)
+    description = fake.text()
+
+    # Вставляем данные продукта в таблицу Products
+    cursor.execute("INSERT INTO Products (Product_ID, Product_Name, Wholesale_Price, Retail_Price, Description) VALUES (%s, %s, %s, %s, %s)",
+                   (i, product_name, wholesale_price, retail_price, description))
+
+# Генерация данных для таблицы Customers
+for i in range(1, 101):  # Создаем 100 клиентов
+    phone = fake.phone_number()[:20]
+    contact_person = fake.name()
+    address = fake.address()
+
+    # Вставляем данные клиента в таблицу Customers
+    cursor.execute("INSERT INTO Customers (Customer_ID, Phone, Contact_Person, Address) VALUES (%s, %s, %s, %s)",
+                   (i, phone, contact_person, address))
+
+# Генерация данных для таблицы Transactions
+for i in range(2, 100):  # Создаем 1000 транзакций
+    transaction_date = fake.date_between(start_date='-1y', end_date='today')
+    product_id = random.randint(10, 100)
+    quantity = random.randint(1, 10)
+    customer_id = random.randint(1, 100)
+    wholesale_flag = random.choice([False, True])
+
+    # Вставляем данные транзакции в таблицу Transactions
+    cursor.execute("INSERT INTO Transactions (Transaction_ID, Transaction_Date, Product_ID, Quantity, Customer_ID, Wholesale_Flag) VALUES (%s, %s, %s, %s, %s, %s)",
+                   (i, transaction_date, product_id, quantity, customer_id, wholesale_flag))
+
+# Коммитим изменения и закрываем соединение
+conn.commit()
+conn.close()
+
+В итоге получаем заполненную бд
+
+https://sun9-52.userapi.com/impg/Hj3gdBTqi315zCKpqX5gV7v_J2I3GFIPXzYcmQ/RYAxJ2Fy0oU.jpg?size=1108x460&quality=96&sign=d703b4376db0ec58af23f4e77c6b220a&type=album
+
+
+
+
