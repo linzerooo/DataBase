@@ -1,0 +1,46 @@
+Вариант № 4. Реализация готовой продукции
+Описание предметной области
+Вы работаете в компании, занимающейся оптово-розничной
+продажей различных товаров. Вашей задачей является отслеживание
+финансовой стороны ее работы.
+Деятельность компании организована следующим образом:
+компания торгует товарами из определенного спектра. Каждый из этих
+товаров характеризуется наименованием, оптовой ценой, розничной ценой
+и справочной информацией. В вашу компанию обращаются покупатели.
+Для каждого из них вы запоминаете в базе данных стандартные данные
+(наименование, адрес, телефон, контактное лицо) и составляете по каждой
+сделке документ, запоминая наряду с покупателем количество купленного
+им товара и дату покупки.
+Возможный набор сущностей
+Товары (Код товара, Наименование, Оптовая цена, Розничная цена,
+Описание).
+Покупатели (Код покупателя, Телефон, Контактное лицо, Адрес).
+Сделки (Код сделки, Дата сделки, Код товара, Количество, Код
+покупателя, Признак оптовой продажи).
+
+Выполним код MsSQL
+ '''CREATE DATABASE SalesDB;'''
+GO
+CREATE TABLE Products (
+    Product_ID INT PRIMARY KEY,
+    Product_Name NVARCHAR(255),
+    Wholesale_Price DECIMAL(10, 2),
+    Retail_Price DECIMAL(10, 2),
+    Description NVARCHAR(MAX)
+);
+CREATE TABLE Customers (
+    Customer_ID INT PRIMARY KEY,
+    Phone NVARCHAR(20),
+    Contact_Person NVARCHAR(255),
+    Address NVARCHAR(MAX)
+);
+CREATE TABLE Transactions (
+    Transaction_ID INT PRIMARY KEY,
+    Transaction_Date DATE,
+    Product_ID INT,
+    Quantity INT,
+    Customer_ID INT,
+    Wholesale_Flag BIT,
+    FOREIGN KEY (Product_ID) REFERENCES Products(Product_ID),
+    FOREIGN KEY (Customer_ID) REFERENCES Customers(Customer_ID)
+);
